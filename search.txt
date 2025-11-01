@@ -1,0 +1,452 @@
+void main() {
+  runApp(const FootballApp());
+}
+
+class FootballApp extends StatelessWidget {
+  const FootballApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Football Hub',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.purple,
+      ),
+      home: const ClubSearchPage(initialLeague: 'all'),
+    );
+  }
+}
+
+class ClubSearchPage extends StatefulWidget {
+  final String initialLeague;
+
+  const ClubSearchPage({
+    super.key,
+    this.initialLeague = 'all',
+  });
+
+  @override
+  State<ClubSearchPage> createState() => _ClubSearchPageState();
+}
+
+class _ClubSearchPageState extends State<ClubSearchPage> {
+  final TextEditingController searchController = TextEditingController();
+  String currentFilter = 'all';
+
+  final List<Map<String, String>> leagues = [
+    {'id': 'all', 'name': 'Semua Klub'},
+    {'id': 'epl', 'name': 'Premier League'},
+    {'id': 'laliga', 'name': 'La Liga'},
+    {'id': 'seriea', 'name': 'Serie A'},
+    {'id': 'bundesliga', 'name': 'Bundesliga'},
+    {'id': 'ligue1', 'name': 'Ligue 1'},
+  ];
+
+  final List<Map<String, String>> clubs = [
+    {'name': 'Arsenal', 'league': 'epl', 'leagueName': 'Premier League', 'logo': '🔴'},
+    {'name': 'Chelsea', 'league': 'epl', 'leagueName': 'Premier League', 'logo': '🔵'},
+    {'name': 'Liverpool', 'league': 'epl', 'leagueName': 'Premier League', 'logo': '🔴'},
+    {'name': 'Manchester United', 'league': 'epl', 'leagueName': 'Premier League', 'logo': '🔴'},
+    {'name': 'Manchester City', 'league': 'epl', 'leagueName': 'Premier League', 'logo': '🔵'},
+    {'name': 'Tottenham', 'league': 'epl', 'leagueName': 'Premier League', 'logo': '⚪'},
+    
+    {'name': 'Real Madrid', 'league': 'laliga', 'leagueName': 'La Liga', 'logo': '⚪'},
+    {'name': 'Barcelona', 'league': 'laliga', 'leagueName': 'La Liga', 'logo': '🔵'},
+    {'name': 'Atletico Madrid', 'league': 'laliga', 'leagueName': 'La Liga', 'logo': '🔴'},
+    {'name': 'Sevilla', 'league': 'laliga', 'leagueName': 'La Liga', 'logo': '⚪'},
+    {'name': 'Valencia', 'league': 'laliga', 'leagueName': 'La Liga', 'logo': '🟠'},
+    
+    {'name': 'Juventus', 'league': 'seriea', 'leagueName': 'Serie A', 'logo': '⚫'},
+    {'name': 'Inter Milan', 'league': 'seriea', 'leagueName': 'Serie A', 'logo': '🔵'},
+    {'name': 'AC Milan', 'league': 'seriea', 'leagueName': 'Serie A', 'logo': '🔴'},
+    {'name': 'Napoli', 'league': 'seriea', 'leagueName': 'Serie A', 'logo': '🔵'},
+    {'name': 'Roma', 'league': 'seriea', 'leagueName': 'Serie A', 'logo': '🟡'},
+    
+    {'name': 'Bayern Munich', 'league': 'bundesliga', 'leagueName': 'Bundesliga', 'logo': '🔴'},
+    {'name': 'Borussia Dortmund', 'league': 'bundesliga', 'leagueName': 'Bundesliga', 'logo': '🟡'},
+    {'name': 'RB Leipzig', 'league': 'bundesliga', 'leagueName': 'Bundesliga', 'logo': '🔴'},
+    {'name': 'Bayer Leverkusen', 'league': 'bundesliga', 'leagueName': 'Bundesliga', 'logo': '🔴'},
+    {'name': 'Schalke 04', 'league': 'bundesliga', 'leagueName': 'Bundesliga', 'logo': '🔵'},
+    
+    {'name': 'PSG', 'league': 'ligue1', 'leagueName': 'Ligue 1', 'logo': '🔵'},
+    {'name': 'Marseille', 'league': 'ligue1', 'leagueName': 'Ligue 1', 'logo': '⚪'},
+    {'name': 'Lyon', 'league': 'ligue1', 'leagueName': 'Ligue 1', 'logo': '🔵'},
+    {'name': 'Monaco', 'league': 'ligue1', 'leagueName': 'Ligue 1', 'logo': '🔴'},
+    {'name': 'Lille', 'league': 'ligue1', 'leagueName': 'Ligue 1', 'logo': '🔴'},
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    currentFilter = widget.initialLeague;
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  List<Map<String, String>> get filteredClubs {
+    String searchTerm = searchController.text.toLowerCase();
+    List<Map<String, String>> filtered = clubs;
+
+    if (currentFilter != 'all') {
+      filtered = filtered.where((club) => club['league'] == currentFilter).toList();
+    }
+
+    if (searchTerm.isNotEmpty) {
+      filtered = filtered.where((club) {
+        final clubName = club['name'] ?? '';
+        return clubName.toLowerCase().contains(searchTerm);
+      }).toList();
+    }
+
+    return filtered;
+  }
+
+  Color getFilterColor(String leagueId, bool isStart) {
+    switch (leagueId) {
+      case 'all':
+      case 'epl':
+        return isStart ? Color(0xFF9333EA) : Color(0xFFEC4899);
+      case 'laliga':
+        return isStart ? Color(0xFFF97316) : Color(0xFFEF4444);
+      case 'seriea':
+        return isStart ? Color(0xFF2563EB) : Color(0xFF06B6D4);
+      case 'bundesliga':
+        return isStart ? Color(0xFFDC2626) : Color(0xFFEAB308);
+      case 'ligue1':
+        return isStart ? Color(0xFF1D4ED8) : Color(0xFF3B82F6);
+      default:
+        return isStart ? Color(0xFF9333EA) : Color(0xFFEC4899);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final filtered = filteredClubs;
+
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF0F172A),
+              Color(0xFF581C87),
+              Color(0xFF0F172A),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Header
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.4),
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Colors.white.withOpacity(0.1),
+                      width: 1,
+                    ),
+                  ),
+                ),
+                padding: const EdgeInsets.all(24),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ShaderMask(
+                            shaderCallback: (bounds) => LinearGradient(
+                              colors: [Color(0xFFC084FC), Color(0xFFF9A8D4)],
+                            ).createShader(bounds),
+                            child: const Text(
+                              'Cari Klub',
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Temukan klub favoritmu',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Content
+              Expanded(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        children: [
+                          // Search Bar
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.1),
+                                width: 1,
+                              ),
+                            ),
+                            child: TextField(
+                              controller: searchController,
+                              onChanged: (value) {
+                                setState(() {});
+                              },
+                              style: TextStyle(color: Colors.white, fontSize: 14),
+                              decoration: InputDecoration(
+                                hintText: 'Cari nama klub...',
+                                hintStyle: TextStyle(color: Colors.grey[400]),
+                                prefixIcon: Icon(Icons.search, color: Colors.grey[400], size: 20),
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Filter Pills
+                          SizedBox(
+                            height: 45,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: leagues.length,
+                              separatorBuilder: (_, __) => const SizedBox(width: 8),
+                              itemBuilder: (context, index) {
+                                final league = leagues[index];
+                                final leagueId = league['id'] ?? 'all';
+                                final leagueName = league['name'] ?? '';
+                                final isSelected = currentFilter == leagueId;
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      currentFilter = leagueId;
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      gradient: isSelected
+                                          ? LinearGradient(
+                                              colors: [
+                                                getFilterColor(leagueId, true),
+                                                getFilterColor(leagueId, false),
+                                              ],
+                                            )
+                                          : null,
+                                      color: isSelected ? null : Colors.white.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(25),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                    child: Center(
+                                      child: Text(
+                                        leagueName,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                          color: isSelected ? Colors.white : Colors.grey[300],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+
+                          // Results Header
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Hasil Pencarian',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                '${filtered.length} klub ditemukan',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.grey[400],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // Club List
+                    Expanded(
+                      child: filtered.isEmpty
+                          ? Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '🔍',
+                                    style: TextStyle(fontSize: 64),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    'Klub tidak ditemukan',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 48),
+                                    child: Text(
+                                      'Coba ubah kata kunci pencarian atau filter liga yang dipilih',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[400],
+                                        height: 1.6,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : ListView.separated(
+                              padding: const EdgeInsets.symmetric(horizontal: 24),
+                              itemCount: filtered.length,
+                              separatorBuilder: (_, __) => const SizedBox(height: 12),
+                              itemBuilder: (context, index) {
+                                final club = filtered[index];
+                                return buildClubCard(club);
+                              },
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildClubCard(Map<String, String> club) {
+    final clubLogo = club['logo'] ?? '⚽';
+    final clubName = club['name'] ?? 'Unknown';
+    final clubLeague = club['leagueName'] ?? '';
+    
+    return GestureDetector(
+      onTap: () {
+        // Navigate to club detail page (currently disabled)
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.1),
+            width: 1,
+          ),
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            // Club Logo
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: Text(
+                  clubLogo,
+                  style: TextStyle(fontSize: 24),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+
+            // Club Info
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    clubName,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    clubLeague,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[400],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Arrow Icon
+            Icon(
+              Icons.chevron_right,
+              color: Color(0xFFC084FC),
+              size: 20,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

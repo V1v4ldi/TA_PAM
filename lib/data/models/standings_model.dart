@@ -1,0 +1,48 @@
+import 'dart:core';
+
+class MatchModel {
+  final String leagueName;
+  final String conference;
+  final String division;
+  final int position;
+  final String teamName;
+  final String teamLogo;
+  final int won;
+  final int lost;
+  final int ties;
+  final int pointsFor;
+  final int pointsAgainst;
+  final int pointsDifference;
+
+  MatchModel({
+    required this.leagueName,
+    required this.conference,
+    required this.division,
+    required this.position,
+    required this.teamName,
+    required this.teamLogo,
+    required this.won,
+    required this.lost,
+    required this.ties,
+    required this.pointsFor,
+    required this.pointsAgainst,
+    required this.pointsDifference,
+  });
+
+  factory MatchModel.fromJson(Map<String, dynamic> json) {
+    return MatchModel(
+      leagueName: json['league']?['name'] ?? '',
+      conference: json['conference'] ?? '',
+      division: json['division'] ?? '',
+      position: json['position'] ?? 0,
+      teamName: json['team']?['name'] ?? '',
+      teamLogo: json['team']?['logo'] ?? '',
+      won: json['won'] ?? 0,
+      lost: json['lost'] ?? 0,
+      ties: json['ties'] ?? 0,
+      pointsFor: json['points']?['for'] ?? 0,
+      pointsAgainst: json['points']?['against'] ?? 0,
+      pointsDifference: json['points']?['difference'] ?? 0,
+    );
+  }
+}

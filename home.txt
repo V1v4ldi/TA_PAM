@@ -1,0 +1,512 @@
+void main() {
+  runApp(const FootballApp());
+}
+
+class FootballApp extends StatelessWidget {
+  const FootballApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Football Hub',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.purple,
+      ),
+      home: FootballHomePage(),
+    );
+  }
+}
+
+class FootballHomePage extends StatefulWidget {
+  const FootballHomePage({super.key});
+
+  @override
+  State<FootballHomePage> createState() => _FootballHomePageState();
+}
+
+class _FootballHomePageState extends State<FootballHomePage> {
+  String selectedLeague = 'all';
+
+  final List<Map<String, dynamic>> leagues = [
+    {'id': 'all', 'name': 'Semua Liga', 'colors': [Color(0xFF9333EA), Color(0xFFEC4899)]},
+    {'id': 'epl', 'name': 'Premier League', 'colors': [Color(0xFF9333EA), Color(0xFFEC4899)]},
+    {'id': 'laliga', 'name': 'La Liga', 'colors': [Color(0xFFF97316), Color(0xFFEF4444)]},
+    {'id': 'seriea', 'name': 'Serie A', 'colors': [Color(0xFF2563EB), Color(0xFF06B6D4)]},
+    {'id': 'bundesliga', 'name': 'Bundesliga', 'colors': [Color(0xFFDC2626), Color(0xFFEAB308)]},
+    {'id': 'ligue1', 'name': 'Ligue 1', 'colors': [Color(0xFF1D4ED8), Color(0xFF3B82F6)]},
+  ];
+
+  final List<Map<String, dynamic>> matches = [
+    {
+      'id': 1,
+      'league': 'epl',
+      'leagueColors': [Color(0xFF9333EA), Color(0xFFEC4899)],
+      'homeTeam': 'Arsenal',
+      'awayTeam': 'Chelsea',
+      'homeScore': null,
+      'awayScore': null,
+      'time': '19:30',
+      'date': 'Sabtu, 20 Okt',
+      'status': 'upcoming'
+    },
+    {
+      'id': 2,
+      'league': 'laliga',
+      'leagueColors': [Color(0xFFF97316), Color(0xFFEF4444)],
+      'homeTeam': 'Real Madrid',
+      'awayTeam': 'Barcelona',
+      'homeScore': 2,
+      'awayScore': 1,
+      'time': 'FT',
+      'date': 'Sabtu, 20 Okt',
+      'status': 'finished'
+    },
+    {
+      'id': 3,
+      'league': 'seriea',
+      'leagueColors': [Color(0xFF2563EB), Color(0xFF06B6D4)],
+      'homeTeam': 'Inter Milan',
+      'awayTeam': 'AC Milan',
+      'homeScore': null,
+      'awayScore': null,
+      'time': '22:00',
+      'date': 'Minggu, 21 Okt',
+      'status': 'upcoming'
+    },
+    {
+      'id': 4,
+      'league': 'bundesliga',
+      'leagueColors': [Color(0xFFDC2626), Color(0xFFEAB308)],
+      'homeTeam': 'Bayern Munich',
+      'awayTeam': 'Dortmund',
+      'homeScore': 3,
+      'awayScore': 3,
+      'time': 'FT',
+      'date': 'Sabtu, 20 Okt',
+      'status': 'finished'
+    },
+    {
+      'id': 5,
+      'league': 'ligue1',
+      'leagueColors': [Color(0xFF1D4ED8), Color(0xFF3B82F6)],
+      'homeTeam': 'PSG',
+      'awayTeam': 'Marseille',
+      'homeScore': null,
+      'awayScore': null,
+      'time': '23:45',
+      'date': 'Minggu, 21 Okt',
+      'status': 'upcoming'
+    },
+    {
+      'id': 6,
+      'league': 'epl',
+      'leagueColors': [Color(0xFF9333EA), Color(0xFFEC4899)],
+      'homeTeam': 'Man United',
+      'awayTeam': 'Liverpool',
+      'homeScore': 1,
+      'awayScore': 2,
+      'time': 'FT',
+      'date': 'Sabtu, 20 Okt',
+      'status': 'finished'
+    },
+  ];
+
+  List<Map<String, dynamic>> get filteredMatches {
+    if (selectedLeague == 'all') {
+      return matches;
+    }
+    return matches.where((m) => m['league'] == selectedLeague).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF0F172A),
+              Color(0xFF581C87),
+              Color(0xFF0F172A),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.4),
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Colors.white.withOpacity(0.1),
+                      width: 1,
+                    ),
+                  ),
+                ),
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ShaderMask(
+                      shaderCallback: (bounds) => LinearGradient(
+                        colors: [Color(0xFFC084FC), Color(0xFFF9A8D4)],
+                      ).createShader(bounds),
+                      child: const Text(
+                        'Football Hub',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Ikuti pertandingan favoritmu',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[400],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: buildMenuButton(
+                              'Cari Klub',
+                              Icons.search,
+                              [Color(0xFF9333EA), Color(0xFFEC4899)],
+                              () {},
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: buildMenuButton(
+                              'Cari Pemain',
+                              Icons.person_search,
+                              [Color(0xFF2563EB), Color(0xFF06B6D4)],
+                              () {},
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      buildMenuButton(
+                        'Kompetisi',
+                        Icons.emoji_events,
+                        [Color(0xFFEAB308), Color(0xFFF97316)],
+                        () {},
+                      ),
+                      const SizedBox(height: 32),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.calendar_today,
+                            color: Color(0xFFC084FC),
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          const Text(
+                            'Jadwal Pertandingan',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        height: 45,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: leagues.length,
+                          separatorBuilder: (_, __) => const SizedBox(width: 8),
+                          itemBuilder: (context, index) {
+                            final league = leagues[index];
+                            final isSelected = selectedLeague == league['id'];
+                            return buildLeagueChip(
+                              league['name'],
+                              league['id'],
+                              league['colors'],
+                              isSelected,
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      ...filteredMatches.map((match) => Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: buildMatchCard(match),
+                      )).toList(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildMenuButton(
+    String title,
+    IconData icon,
+    List<Color> colors,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(colors: colors),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: colors[0].withOpacity(0.3),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                shape: BoxShape.circle,
+              ),
+              padding: const EdgeInsets.all(16),
+              child: Icon(icon, size: 28),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildLeagueChip(
+    String name,
+    String id,
+    List<Color> colors,
+    bool isSelected,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedLeague = id;
+        });
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: isSelected ? LinearGradient(colors: colors) : null,
+          color: isSelected ? null : Colors.white.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(25),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Text(
+          name,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: isSelected ? Colors.white : Colors.grey[300],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildMatchCard(Map<String, dynamic> match) {
+    final isFinished = match['status'] == 'finished';
+    final leagueName = leagues.firstWhere(
+      (l) => l['id'] == match['league'],
+      orElse: () => leagues[0],
+    )['name'];
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.1),
+          width: 1,
+        ),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: match['leagueColors'],
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                child: Text(
+                  leagueName,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  Icon(Icons.access_time, size: 14, color: Colors.grey[400]),
+                  const SizedBox(width: 4),
+                  Text(
+                    match['date'],
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[400],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      match['homeTeam'],
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    if (isFinished)
+                      Text(
+                        '${match['homeScore']}',
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFC084FC),
+                        ),
+                      )
+                    else
+                      Text(
+                        'vs',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: isFinished
+                        ? Colors.red.withOpacity(0.2)
+                        : Colors.green.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  child: Text(
+                    match['time'],
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: isFinished ? Colors.red[300] : Colors.green[300],
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      match['awayTeam'],
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    if (isFinished)
+                      Text(
+                        '${match['awayScore']}',
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFF9A8D4),
+                        ),
+                      )
+                    else
+                      Text(
+                        '-',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          TextButton(
+            onPressed: () {},
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Lihat Detail',
+                  style: TextStyle(
+                    color: Color(0xFFC084FC),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  Icons.chevron_right,
+                  size: 16,
+                  color: Color(0xFFC084FC),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
