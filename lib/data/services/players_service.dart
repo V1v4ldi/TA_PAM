@@ -2,9 +2,9 @@ import 'package:http/http.dart' as http;
 
 const String _APIKEY = "244aa37f2c3fec3607d510a62f1ce7d9";
 const String _APIHOST = "v1.american-football.api-sports.io";
+final baseurl = 'https://v1.american-football.api-sports.io/';
 
 class PlayerService {
-  final baseurl = 'https://v1.american-football.api-sports.io/';
 
   Future<http.Response> fetchPlayer(int playerId) async {
     final url = Uri.parse("$baseurl/players?id=$playerId");

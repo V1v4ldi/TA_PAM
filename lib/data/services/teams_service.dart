@@ -18,7 +18,19 @@ class TeamsService {
   }
 
   Future<http.Response> searchTeam(String query) async {
-    final url = Uri.parse("$baseurl/teams?search=$query");
+    final url = Uri.parse("$baseurl/teams?league=1&season=2023&search=$query");
+    return await http.get(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'x-rapidapi-host': APIHOST,
+        'x-rapidapi-key': APIKEY,
+      },
+    );
+  }
+
+  Future<http.Response> fetchSquad(String query) async {
+    final url = Uri.parse("$baseurl/players?season=2023&team=$query");
     return await http.get(
       url,
       headers: {

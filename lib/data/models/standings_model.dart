@@ -5,6 +5,7 @@ class MatchModel {
   final String conference;
   final String division;
   final int position;
+  final int teamId;
   final String teamName;
   final String teamLogo;
   final int won;
@@ -19,6 +20,7 @@ class MatchModel {
     required this.conference,
     required this.division,
     required this.position,
+    required this.teamId,
     required this.teamName,
     required this.teamLogo,
     required this.won,
@@ -35,6 +37,7 @@ class MatchModel {
       conference: json['conference'] ?? '',
       division: json['division'] ?? '',
       position: json['position'] ?? 0,
+      teamId: json['team']?['id'] ?? '',
       teamName: json['team']?['name'] ?? '',
       teamLogo: json['team']?['logo'] ?? '',
       won: json['won'] ?? 0,
