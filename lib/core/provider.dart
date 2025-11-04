@@ -5,6 +5,7 @@ import 'package:tugas_akhir/data/repositories/player_repositories.dart';
 import 'package:tugas_akhir/data/repositories/standing_repositories.dart';
 import 'package:tugas_akhir/data/repositories/team_repositories.dart';
 import 'package:tugas_akhir/data/services/games_service.dart';
+import 'package:tugas_akhir/data/services/locator_service.dart';
 import 'package:tugas_akhir/data/services/players_service.dart';
 import 'package:tugas_akhir/data/services/standings_service.dart';
 import 'package:tugas_akhir/data/services/teams_service.dart';
@@ -19,6 +20,7 @@ List<SingleChildWidget> get appProviders => [
   Provider(create: (_) => PlayerService()),
   Provider(create: (_) => TeamsService()),
   Provider(create: (_) => StandingsService()),
+  Provider(create: (_) => LocationService()),
 
   Provider(create: (context) => GameRepository(context.read<GameService>())),
   Provider(create: (context) => PlayerRepositories(context.read<PlayerService>())),

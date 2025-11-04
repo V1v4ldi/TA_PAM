@@ -8,16 +8,16 @@ class StandingsViewModels extends ChangeNotifier {
 
   StandingsViewModels(this._matchRepo);
 
-  List<MatchModel> _allMatches = [];
+  List<StandingsModel> _allMatches = [];
   bool fetchingData = false;
-  List<MatchModel> get matches => _allMatches;
-  List<MatchModel> get leagueSorted {
+  List<StandingsModel> get matches => _allMatches;
+  List<StandingsModel> get leagueSorted {
     final list = [..._allMatches];
     list.sort(_sortTeam);
     return list;
   }
 
-  int _sortTeam(MatchModel a, MatchModel b) {
+  int _sortTeam(StandingsModel a, StandingsModel b) {
     if (a.won != b.won) return b.won.compareTo(a.won);
 
     final diffA = a.pointsFor - a.pointsAgainst;
@@ -32,8 +32,8 @@ class StandingsViewModels extends ChangeNotifier {
   }
 
   // GROUP BY LEAGUE
-  Map<String, List<MatchModel>> get groupedByLeague {
-    final Map<String, List<MatchModel>> map = {};
+  Map<String, List<StandingsModel>> get groupedByLeague {
+    final Map<String, List<StandingsModel>> map = {};
 
     for (var m in _allMatches) {
       final key = m.leagueName.isNotEmpty ? m.leagueName : 'Unknown League';
@@ -48,8 +48,8 @@ class StandingsViewModels extends ChangeNotifier {
     return map;
   }
 
-  Map<String, List<MatchModel>> get groupedByConference {
-    final map = <String, List<MatchModel>>{};
+  Map<String, List<StandingsModel>> get groupedByConference {
+    final map = <String, List<StandingsModel>>{};
     for (var m in _allMatches) {
       map.putIfAbsent(m.conference, () => []);
       map[m.conference]!.add(m);
@@ -58,8 +58,8 @@ class StandingsViewModels extends ChangeNotifier {
     return map;
   }
 
-  Map<String, List<MatchModel>> get groupedByDivision {
-    final map = <String, List<MatchModel>>{};
+  Map<String, List<StandingsModel>> get groupedByDivision {
+    final map = <String, List<StandingsModel>>{};
     for (var m in _allMatches) {
       map.putIfAbsent(m.division, () => []);
       map[m.division]!.add(m);

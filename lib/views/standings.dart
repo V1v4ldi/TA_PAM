@@ -54,7 +54,7 @@ class StandingsContent extends StatelessWidget {
           return Center(child: Text("Data tidak ditemukan.", style: TextStyle(color: AppColors.grey300)));
         }
 
-        Map<String, List<MatchModel>> grouped = {};
+        Map<String, List<StandingsModel>> grouped = {};
         if (type == 'league') {
           final list = viewModel.leagueSorted;
           return ListView.builder(
@@ -94,7 +94,7 @@ class StandingsContent extends StatelessWidget {
 }
 
 class _LeagueTeamCard extends StatelessWidget {
-  final MatchModel team;
+  final StandingsModel team;
   final int index;
   final VoidCallback onTap;
 
@@ -160,7 +160,7 @@ class _LeagueTeamCard extends StatelessWidget {
 class _GroupCard extends StatelessWidget {
   final String title;
   final String subtitle;
-  final List<MatchModel> teams;
+  final List<StandingsModel> teams;
   final bool isLeague;
 
   const _GroupCard({
@@ -196,7 +196,7 @@ class _GroupCard extends StatelessWidget {
 }
 
 class _TeamRow extends StatelessWidget {
-  final MatchModel team;
+  final StandingsModel team;
   final int index;
 
   const _TeamRow({required this.team, required this.index});

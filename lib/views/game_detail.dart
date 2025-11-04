@@ -73,7 +73,7 @@ class _GameContent extends StatelessWidget {
             children: [
               _teamColumn(home),
               Text(
-                "${home.statistics.pointsAgainst} - ${away.statistics.pointsAgainst}",
+                "${away.statistics.pointsAgainst} - ${home.statistics.pointsAgainst}",
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 28,

@@ -1,6 +1,6 @@
 import 'dart:core';
 
-class MatchModel {
+class StandingsModel {
   final String leagueName;
   final String conference;
   final String division;
@@ -15,7 +15,7 @@ class MatchModel {
   final int pointsAgainst;
   final int pointsDifference;
 
-  MatchModel({
+  StandingsModel({
     required this.leagueName,
     required this.conference,
     required this.division,
@@ -31,8 +31,8 @@ class MatchModel {
     required this.pointsDifference,
   });
 
-  factory MatchModel.fromJson(Map<String, dynamic> json) {
-    return MatchModel(
+  factory StandingsModel.fromJson(Map<String, dynamic> json) {
+    return StandingsModel(
       leagueName: json['league']?['name'] ?? '',
       conference: json['conference'] ?? '',
       division: json['division'] ?? '',

@@ -8,7 +8,7 @@ class StandingRepositories {
 
   StandingRepositories(this._standingService);
 
-  Future<List<MatchModel>> getStandings() async {
+  Future<List<StandingsModel>> getStandings() async {
     final response = await _standingService.fetchStandings();
 
     if (response.statusCode != 200) {
@@ -22,6 +22,6 @@ class StandingRepositories {
       throw Exception("Tidak ada data standings ditemukan");
     }
 
-    return matchesData.map((match) => MatchModel.fromJson(match)).toList();
+    return matchesData.map((match) => StandingsModel.fromJson(match)).toList();
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir/core/theme.dart';
 import 'package:tugas_akhir/data/models/games_model.dart';
-import 'package:tugas_akhir/modelviews/game_detail_view_models.dart';
 import 'package:tugas_akhir/modelviews/games_view_models.dart';
 import 'package:tugas_akhir/views/game_detail.dart';
 
@@ -183,14 +182,28 @@ class GameTile extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("$date  •  $time",
-                  style: TextStyle(color: AppColors.grey400, fontSize: 12)),
-              _statusBadge(game.status),
-            ],
-          ),
+         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              game.week.isNotEmpty ? game.week : '-',
+              style: TextStyle(color: AppColors.grey400, fontSize: 11),
+            ),
+            _statusBadge(game.status),
+          ],
+        ),
+
+        const SizedBox(height: 4),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "$date  •  $time",
+              style: TextStyle(color: AppColors.grey400, fontSize: 12),
+            ),
+          ],
+        ),
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -206,6 +219,37 @@ class GameTile extends StatelessWidget {
               ),
               _teamItem(away),
             ],
+          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  // TODO: integrasi LBS / Maps disini
+                  // _openVenueInMaps(context, game.venueName);
+                },
+                child: Text(
+                  game.venueName,
+                  style: TextStyle(
+                    color: AppColors.pink300, // biar keliatan bisa diklik
+                    fontSize: 14,
+                    decoration: TextDecoration.underline, // opsional
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+
+            Expanded(
+              child: Text(
+                game.venueCity,
+                style: TextStyle(color: AppColors.grey400, fontSize: 14),
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.end,
+                ),
+              ),
+            ]
           ),
         ],
       ),
