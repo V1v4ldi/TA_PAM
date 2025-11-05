@@ -1,53 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_akhir/data/repositories/auth_repositories.dart';
 
 class LoginViewModels extends ChangeNotifier {
+  final AuthRepositories _repo;
+  LoginViewModels(this._repo);
+
+  bool isLoading = false;
   String _email = "";
-  String _pass = "";
-  bool _isLoading = false;
-  String? _errorMessage;
-
-  bool get isLoading => _isLoading;
-  String? get errorMessage => _errorMessage;
-
-  static const String _validEmail = 'user@arsenal.com';
-  static const String _validPassword = 'gooners';
+  String _password = "";
+  String? errorMessage;
 
   void setEmail(String email) {
-    _email = email.trim();
-    _errorMessage = null;
-    notifyListeners();
+    _email = email;
   }
 
   void setPass(String pass) {
-    _pass = pass.trim();
-    _errorMessage = null;
-    notifyListeners();
+    _password = pass;
   }
 
   Future<bool> login() async {
-    if (_email.isEmpty || _pass.isEmpty) {
-      _errorMessage = "email atau password harus diisi";
+    try {
+      isLoading = true;
+      errorMessage = null;
       notifyListeners();
+
+      if (_email.isEmpty || _password.isEmpty) {
+        errorMessage = "Email dan password wajib diisi";
+        return false;
+      }
+
+      final user = await _repo.login(_email, _password);
+
+      if (user == null) {
+        errorMessage = "Email atau password salah";
+        return false;
+      }
+
+      return true;
+    } catch (e) {
+      errorMessage = "Terjadi kesalahan: $e";
       return false;
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-
-    _setLoading(true);
-
-    await Future.delayed(const Duration(seconds: 2));
-
-    bool success = (_email == _validEmail && _pass == _validPassword);
-
-    if (!success) {
-      _errorMessage = "Kredensial tidak valid";
-    } else {
-      _errorMessage = null;
-    }
-
-    _setLoading(false);
-    return success;
   }
 
-  void _setLoading(bool value) {
-    _isLoading = value;
+  Future<void> logout() async {
+    isLoading = true;
+    notifyListeners();
+    await _repo.logout();
+    isLoading = false;
+    notifyListeners();
   }
 }
