@@ -4,16 +4,16 @@ import 'package:tugas_akhir/core/theme.dart';
 import 'package:tugas_akhir/data/models/games_model.dart';
 import 'package:tugas_akhir/modelviews/games_view_models.dart';
 import 'package:tugas_akhir/views/game_detail.dart';
+import 'package:tugas_akhir/views/venue.dart';
 
 class GamesPage extends StatelessWidget {
   const GamesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     // load first time only
     WidgetsBinding.instance.addPostFrameCallback((_) {
-    final vm = context.watch<GamesViewModels>();
+      final vm = context.watch<GamesViewModels>();
       if (!vm.isLoading) vm.loadGames();
     });
 
@@ -26,12 +26,11 @@ class _GamesContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  final vm = context.watch<GamesViewModels>();
+    final vm = context.watch<GamesViewModels>();
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
           Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -110,7 +109,6 @@ Widget _weekBtn(BuildContext context, String w) {
   );
 }
 
-
 class SeasonSection extends StatelessWidget {
   final String title;
   final List<GameModel> games;
@@ -129,7 +127,10 @@ class SeasonSection extends StatelessWidget {
           child: Text(
             title,
             style: const TextStyle(
-              fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
         ),
         ...games.map((g) => GameTile(game: g)),
@@ -147,13 +148,11 @@ class GameTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-      Navigator.push(
-      context,
-      MaterialPageRoute(
-      builder: (ctx) => GameDetail(gameId: game.id),
-    ),
-  );
-},
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (ctx) => GameDetail(gameId: game.id)),
+        );
+      },
 
       child: _buildCard(context),
     );
@@ -164,7 +163,8 @@ class GameTile extends StatelessWidget {
     final away = game.away;
 
     final date = "${game.date.day}/${game.date.month}/${game.date.year}";
-    final time = "${game.date.hour.toString().padLeft(2, '0')}:${game.date.minute.toString().padLeft(2, '0')}";
+    final time =
+        "${game.date.hour.toString().padLeft(2, '0')}:${game.date.minute.toString().padLeft(2, '0')}";
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -177,33 +177,33 @@ class GameTile extends StatelessWidget {
             color: AppColors.shadowOpacity30,
             blurRadius: 10,
             spreadRadius: 1,
-          )
+          ),
         ],
       ),
       child: Column(
         children: [
-         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              game.week.isNotEmpty ? game.week : '-',
-              style: TextStyle(color: AppColors.grey400, fontSize: 11),
-            ),
-            _statusBadge(game.status),
-          ],
-        ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                game.week.isNotEmpty ? game.week : '-',
+                style: TextStyle(color: AppColors.grey400, fontSize: 11),
+              ),
+              _statusBadge(game.status),
+            ],
+          ),
 
-        const SizedBox(height: 4),
+          const SizedBox(height: 4),
 
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "$date  •  $time",
-              style: TextStyle(color: AppColors.grey400, fontSize: 12),
-            ),
-          ],
-        ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "$date  •  $time",
+                style: TextStyle(color: AppColors.grey400, fontSize: 12),
+              ),
+            ],
+          ),
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -220,42 +220,44 @@ class GameTile extends StatelessWidget {
               _teamItem(away),
             ],
           ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: GestureDetector(
-                onTap: () {
-                  // TODO: integrasi LBS / Maps disini
-                  // _openVenueInMaps(context, game.venueName);
-                },
-                child: Text(
-                  game.venueName,
-                  style: TextStyle(
-                    color: AppColors.pink300, // biar keliatan bisa diklik
-                    fontSize: 14,
-                    decoration: TextDecoration.underline, // opsional
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    // TODO: integrasi LBS / Maps disini
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (ctx) => VenuePage(venueName: game.venueName))
+                    );
+                  },
+                  child: Text(
+                    game.venueName,
+                    style: TextStyle(
+                      color: AppColors.pink300, // biar keliatan bisa diklik
+                      fontSize: 14,
+                      decoration: TextDecoration.underline, // opsional
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-            ),
 
-            Expanded(
-              child: Text(
-                game.venueCity,
-                style: TextStyle(color: AppColors.grey400, fontSize: 14),
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.end,
+              Expanded(
+                child: Text(
+                  game.venueCity,
+                  style: TextStyle(color: AppColors.grey400, fontSize: 14),
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.end,
                 ),
               ),
-            ]
+            ],
           ),
         ],
       ),
     );
   }
-
 
   Widget _teamItem(TeamGame team) {
     return Row(
@@ -269,7 +271,7 @@ class GameTile extends StatelessWidget {
             style: TextStyle(color: AppColors.white, fontSize: 14),
             overflow: TextOverflow.ellipsis,
           ),
-        )
+        ),
       ],
     );
   }
@@ -280,7 +282,9 @@ class GameTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        gradient: finished ? AppColors.laLigaBadgeGradient : AppColors.purplePinkGradient,
+        gradient: finished
+            ? AppColors.laLigaBadgeGradient
+            : AppColors.purplePinkGradient,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
@@ -290,7 +294,6 @@ class GameTile extends StatelessWidget {
     );
   }
 }
-
 
 class RegularSeasonSection extends StatelessWidget {
   final List<GameModel> games;

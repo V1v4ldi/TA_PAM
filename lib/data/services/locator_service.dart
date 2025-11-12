@@ -1,11 +1,12 @@
 import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:http/http.dart' as http;
+import 'package:latlong2/latlong.dart';
 
 class LocationService {
+  static const baseurl = 'https://api.mapbox.com';
+
   Future<Position> getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -38,70 +39,70 @@ class LocationService {
       locationSettings: locationSettings,
     );
   }
-}
 
-class GeoCodingService {
-  final _GeoCodeAPI = dotenv.env['GOOGLE_MAPS_KEY_API'];
-
-  Future<LatLng> fetchCoordinates(String venueName) async {
-    final address = "$venueName, USA";
-
-    final url = Uri.encodeFull(
-      'https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=$_GeoCodeAPI',
+  Future<LatLng> fetchVenueCoordinates(String venueName) async {
+    final url = Uri.parse(
+      'https://nominatim.openstreetmap.org/search?q=$venueName&format=json&limit=1',
     );
 
     try {
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(
+        url,
+        headers: {'User-Agent': 'tugas_akhir/1.0.0+1'},
+      );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
 
-        if (data['status'] == 'OK' && data['results'].isNotEmpty) {
-          final location = data['results'][0]['geometry']['location'];
-          return LatLng(location['lat'], location['lng']);
+        if (data.isNotEmpty) {
+          final lat = double.parse(data[0]['lat']);
+          final lon = double.parse(data[0]['lon']);
+          return LatLng(lat, lon);
         } else {
-          throw Exception('Geocoding Gagal: ${data['status']}');
+          throw Exception('Lokasi tidak ditemukan');
         }
       } else {
-        throw Exception(
-          'Gagal request Geocoding API. Status: ${response.statusCode}',
-        );
+        throw Exception('Gagal request Geocoding API: ${response.statusCode}');
       }
     } catch (e) {
-      rethrow;
+      throw Exception('Error Geocoding: $e');
     }
   }
-}
-
-class DirectionService {
-  final _apiKey = dotenv.env['GOOGLE_MAPS_KEY_API']!;
 
   Future<List<LatLng>> getRoute(LatLng origin, LatLng destination) async {
-    final url =
-        'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&mode=driving&key=$_apiKey';
-
+    final url = Uri.parse(
+      'https://router.project-osrm.org/route/v1/driving/'
+      '${origin.longitude},${origin.latitude};'
+      '${destination.longitude},${destination.latitude}'
+      '?overview=full&geometries=geojson',
+    );
     try {
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(url);
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+      if (response.statusCode != 200) {
+        // Gagal HTTP, kembalikan garis lurus
+        return [origin, destination];
+      }
 
-        if (data['status'] == 'OK' && data['routes'].isNotEmpty) {
-          final points = data['routes'][0]['overview_polyline']['points'];
-          final decodedPoints = PolylinePoints.decodePolyline(points);
-          return decodedPoints
-              .map((p) => LatLng(p.latitude, p.longitude))
-              .toList();
-        } else {
-          throw Exception('Directions gagal: ${data['status']}');
-        }
+      final data = jsonDecode(response.body);
+
+      if (data['code'] == 'Ok' && data['routes'].isNotEmpty) {
+        // Rute SUKSES ditemukan
+        final routeCoords = data['routes'][0]['geometry']['coordinates'];
+
+        final routePoints = routeCoords
+            .map<LatLng>((coord) => LatLng(coord[1], coord[0]))
+            .toList();
+
+        print(routePoints);
+        return routePoints;
       } else {
-        throw Exception(
-          'Request Directions gagal. Status: ${response.statusCode}',
-        );
+        // OSRM tidak menemukan rute ('NoRoute' dll), kembalikan garis lurus
+        return [origin, destination];
       }
     } catch (e) {
-      rethrow;
+      // Error lain (parsing JSON, network, dll), kembalikan garis lurus
+      return [origin, destination];
     }
   }
 }
