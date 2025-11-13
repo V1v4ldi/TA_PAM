@@ -1,12 +1,9 @@
 import 'dart:convert';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 
 class LocationService {
-  static const baseurl = 'https://api.mapbox.com';
-
   Future<Position> getCurrentLocation() async {
     bool serviceEnabled;
     LocationPermission permission;

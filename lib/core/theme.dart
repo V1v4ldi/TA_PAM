@@ -7,7 +7,7 @@ class AppColors {
   static const Color pink300 = Color(0xFFF9A8D4);
   static const Color purple600 = Color(0xFF9333EA);
   static const Color pink600 = Color(0xFFEC4899);
-
+  
   // --- Background Colors ---
   static const Color darkSlate900 = Color(0xFF0F172A);
   static const Color purple900 = Color(0xFF581C87);

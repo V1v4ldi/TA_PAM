@@ -45,6 +45,7 @@ dependencies:
   flutter_polyline_points: ^3.1.0
   nominatim_flutter: ^0.0.8
   latlong2: ^0.9.1
+  flutter_local_notifications: ^19.5.0
 
 dev_dependencies:
   flutter_test:

@@ -8,16 +8,27 @@ class BookmarkRepositories {
 
   BookmarkRepositories(this._authService);
 
-  Future<List<FavTeamModel>> getBookmark() async {
-    final uid = _authService.currentUser()!.id;
-    final response = await supabase
-        .from('fav_team')
-        .select()
-        .eq('user_id', uid);
-    return response.map((e) => FavTeamModel.fromJson(e)).toList();
+  Future<bool> getBookmark(int teamId, String userId) async {
+    try {
+      return await _authService.getBookmark(teamId, userId);
+    } catch (e) {
+      throw Exception("Gagal Mendapatkan Bookmark: $e");
+    }
   }
 
-  addBookmark() async {}
-  
-  removeaddBookmark() async {}
+  Future<void> addBookmark(int teamId, String userId) async {
+    try {
+      await _authService.addBookmark(teamId, userId);
+    } catch (e) {
+      throw Exception("Gagal Add Bookmark: $e");
+    }
+  }
+
+  Future<void> removeBookmark(int teamId, String userId) async {
+    try {
+      await _authService.removeBookmark(teamId, userId);
+    } catch (e) {
+      throw Exception("Gagal Remove Bookmark: $e");
+    }
+  }
 }

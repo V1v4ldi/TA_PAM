@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tugas_akhir/core/theme.dart';
 import 'package:provider/provider.dart';
-import 'package:tugas_akhir/data/repositories/team_repositories.dart';
 import 'package:tugas_akhir/modelviews/team_detail_view_model.dart';
 
 class TeamDetail extends StatelessWidget {
   final int teamId;
   const TeamDetail({required this.teamId, super.key});
 
-   @override
+  @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => TeamDetailViewModel(context.read<TeamRepositories>())..getTeam(teamId),
-      child: const _TeamDetailContent(),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final user = Supabase.instance.client.auth.currentUser;
+      final userId = user?.id;
+
+      if(userId != null){
+        await context.read<TeamDetailViewModel>().init(teamId: teamId, userId: userId);
+      }
+    });
+    return _TeamDetailContent();
   }
 }
 
@@ -34,6 +39,23 @@ class _TeamDetailContent extends StatelessWidget {
           style: const TextStyle(color: AppColors.white),
         ),
         iconTheme: const IconThemeData(color: AppColors.white),
+        actions: [
+          IconButton(
+            icon: ShaderMask(
+              shaderCallback: (bounds) =>
+                  AppColors.purplePinkGradient.createShader(bounds),
+              child: Icon(
+                vm.isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                color: vm.isBookmarked
+                    ? Colors.white
+                    : AppColors.white, // warna dasar icon
+              ),
+            ),
+            onPressed: () async {
+              await vm.toggleBookmark();
+            },
+          ),
+        ],
       ),
       body: Builder(
         builder: (_) {
@@ -66,8 +88,11 @@ class _TeamDetailContent extends StatelessWidget {
                   child: Image.network(
                     t.logo ?? "",
                     height: 120,
-                    errorBuilder: (_, __, ___) =>
-                        const Icon(Icons.shield, size: 80, color: AppColors.grey400),
+                    errorBuilder: (_, __, ___) => const Icon(
+                      Icons.shield,
+                      size: 80,
+                      color: AppColors.grey400,
+                    ),
                   ),
                 ),
 

@@ -17,7 +17,29 @@ class AuthService {
 
   // <-- BOOKMARK (FAV TEAM) -->
 
-  Future<void> removeBookmark() async {
-    
+  Future<bool> getBookmark(int teamId, String userId) async {
+    final response = await _supabase
+        .from('fav_team')
+        .select()
+        .eq('user_id', userId)
+        .eq('api_team_id', teamId)
+        .maybeSingle();
+
+    return response != null;
+  }
+
+  Future<void> addBookmark(int teamId, String userId) async {
+    await _supabase.from('fav_team').insert({
+      'user_id': userId,
+      'api_team_id': teamId,
+      'created_at': DateTime.now().toIso8601String(),
+    });
+  }
+
+  Future<void> removeBookmark(int teamId, String userId) async {
+    await _supabase.from('fav_team')
+    .delete()
+    .eq('user_id', userId)
+    .eq('api_team_id', teamId);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir/modelviews/games_view_models.dart';
+import 'package:tugas_akhir/views/bottom_nav.dart';
 import 'package:tugas_akhir/views/games.dart';
 import 'package:tugas_akhir/views/search.dart';
 import 'package:tugas_akhir/views/standings.dart';
@@ -76,6 +77,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ),
         ),
       ),
+      bottomNavigationBar: CustomBottomNav(currentIndex: 0),
     );
   }
 }

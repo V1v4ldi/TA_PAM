@@ -16,7 +16,9 @@ import 'package:tugas_akhir/data/services/teams_service.dart';
 import 'package:tugas_akhir/modelviews/game_detail_view_models.dart';
 import 'package:tugas_akhir/modelviews/games_view_models.dart';
 import 'package:tugas_akhir/modelviews/login_view_models.dart';
+import 'package:tugas_akhir/modelviews/search_view_models.dart';
 import 'package:tugas_akhir/modelviews/standings_view_models.dart';
+import 'package:tugas_akhir/modelviews/team_detail_view_model.dart';
 import 'package:tugas_akhir/modelviews/venue_view_models.dart';
 
 
@@ -35,11 +37,14 @@ List<SingleChildWidget> get appProviders => [
   Provider(create: (context) => AuthRepositories(context.read<AuthService>())),
   Provider(create: (context) => BookmarkRepositories(context.read<AuthService>())),
   Provider(create: (context) => VenueRepositories(context.read<LocationService>())),
+  Provider(create: (context) => TeamRepositories(context.read<TeamsService>())),
   
   
   ChangeNotifierProvider(create: (context) => LoginViewModels(context.read<AuthRepositories>())),
+  ChangeNotifierProvider(create: (context) => SearchViewModels(context.read<PlayerRepositories>(), context.read<TeamRepositories>())),
   ChangeNotifierProvider(create: (context) => GamesViewModels(context.read<GameRepository>())),
   ChangeNotifierProvider(create: (context) => GameDetailViewModels(context.read<GameRepository>())),
+  ChangeNotifierProvider(create: (context) => TeamDetailViewModel(context.read<TeamRepositories>(), context.read<BookmarkRepositories>())),
   ChangeNotifierProvider(create: (context) => StandingsViewModels(context.read<StandingRepositories>())),
   ChangeNotifierProvider(create: (context) => VenueViewModels(context.read<VenueRepositories>())),
 ];

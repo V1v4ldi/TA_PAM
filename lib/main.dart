@@ -5,23 +5,31 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tugas_akhir/core/provider.dart';
+import 'package:tugas_akhir/views/home.dart';
 import 'package:tugas_akhir/views/login.dart';
+import 'package:tugas_akhir/views/profile.dart';
+import 'package:tugas_akhir/views/search.dart';
+import 'package:tugas_akhir/views/settings.dart';
+import 'package:tugas_akhir/core/notif.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await dotenv.load(fileName: ".env");
+    
+    await initNotifications();
+
+    await Hive.initFlutter();
+    await Hive.openLazyBox("cacheBox");
   } catch (e) {
     throw Exception("Error Load .env: $e");
   }
 
-  await Hive.initFlutter();
-  await Hive.openLazyBox("cacheBox");
 
   await Supabase.initialize(
     url: dotenv.env['SUPABASEHOST'] ?? "",
-    anonKey: dotenv.env['SUPABASEAPI'] ?? ""
-    );
+    anonKey: dotenv.env['SUPABASEAPI'] ?? "",
+  );
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -45,7 +53,14 @@ class FootballApp extends StatelessWidget {
           brightness: Brightness.dark,
           primarySwatch: Colors.purple,
         ),
-        home: const Login(),
+        initialRoute: '/login',
+        routes: {
+          '/login': (_) => const Login(),
+          '/home': (_) => const HomePage(),
+          '/search': (_) => const SearchView(),
+          '/profile': (_) => const Profile(),
+          '/settings': (_) => const Settings(),
+        },
       ),
     );
   }

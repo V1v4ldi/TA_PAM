@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir/core/theme.dart';
-import 'package:tugas_akhir/core/locator.dart';
 import 'package:tugas_akhir/modelviews/search_view_models.dart';
+import 'package:tugas_akhir/views/bottom_nav.dart';
 import 'package:tugas_akhir/views/team_detail.dart';
 import 'package:tugas_akhir/views/player_detail.dart';
 
@@ -11,12 +11,10 @@ class SearchView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => SearchViewModels(
-        playerRepo, teamRepo
-      ),
-      child: const _SearchContent(),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SearchViewModels>();
+    });
+    return _SearchContent();
   }
 }
 
@@ -46,7 +44,9 @@ class _SearchContent extends StatelessWidget {
               vm.search(text); // ← Kirim value
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Minimal 3 karakter untuk mencari")),
+                const SnackBar(
+                  content: Text("Minimal 3 karakter untuk mencari"),
+                ),
               );
             }
           },
@@ -100,42 +100,52 @@ class _SearchContent extends StatelessWidget {
                 if (vm.players.isNotEmpty)
                   _ResultSection(
                     title: "Players",
-                    results: vm.players.map((p) => _ResultCard(
-                      title: p.name,
-                      subtitle: "${p.position ?? '-'} • ${p.college ?? '-'}",
-                      imageUrl: p.image ?? '',
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => PlayerDetail(playerId: p.id),
+                    results: vm.players
+                        .map(
+                          (p) => _ResultCard(
+                            title: p.name,
+                            subtitle:
+                                "${p.position ?? '-'} • ${p.college ?? '-'}",
+                            imageUrl: p.image ?? '',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => PlayerDetail(playerId: p.id),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    )).toList(),
+                        )
+                        .toList(),
                   ),
                 if (vm.teams.isNotEmpty)
                   _ResultSection(
                     title: "Teams",
-                    results: vm.teams.map((t) => _ResultCard(
-                      title: t.name,
-                      subtitle: t.city ?? 'No city info',
-                      imageUrl: t.logo ?? '',
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => TeamDetail(teamId: t.id),
+                    results: vm.teams
+                        .map(
+                          (t) => _ResultCard(
+                            title: t.name,
+                            subtitle: t.city ?? 'No city info',
+                            imageUrl: t.logo ?? '',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => TeamDetail(teamId: t.id),
+                                ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    )).toList(),
+                        )
+                        .toList(),
                   ),
               ],
             );
           },
         ),
       ),
+      bottomNavigationBar: CustomBottomNav(currentIndex: 1),
     );
   }
 }
@@ -191,8 +201,10 @@ class _ResultCard extends StatelessWidget {
       color: AppColors.whiteOpacity10,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ListTile(
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 8.0,
+          horizontal: 16.0,
+        ),
         leading: CircleAvatar(
           backgroundImage: imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
           backgroundColor: AppColors.whiteOpacity20,
