@@ -35,10 +35,6 @@ class TeamRepositories {
     final data = jsonDecode(response.body) as Map<String, dynamic>;
     final teamData = data['response'] as List<dynamic>;
 
-    if (teamData.isEmpty) {
-      throw Exception("Tidak ada data team ditemukan");
-    }
-
     return teamData
       .map((e) => TeamModel.fromJson(e))
       .toList();

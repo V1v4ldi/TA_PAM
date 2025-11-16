@@ -36,7 +36,7 @@ class PlayerModel {
   final String? group;
   final String? position;
   final int? number;
-  final String? salary;
+        String? salary;
   final int? experience;
   final String? image;
 

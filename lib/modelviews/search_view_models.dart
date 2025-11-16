@@ -33,8 +33,6 @@ class SearchViewModels extends ChangeNotifier {
       players = await _playerRepo.searchPlayer(_query);
       teams = await _teamRepo.searchTeam(_query);
     } catch (e) {
-      players = [];
-      teams = [];
       _errorMessage = "Gagal mencari data: $e";
     } finally {
       _isLoading = false;

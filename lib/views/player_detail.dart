@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tugas_akhir/data/repositories/player_repositories.dart';
 import 'package:tugas_akhir/modelviews/player_detail_view_models.dart';
 
 class PlayerDetail extends StatelessWidget {
@@ -9,10 +8,10 @@ class PlayerDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => PlayerDetailViewModels(context.read<PlayerRepositories>())..getPlayer(playerId),
-      child: const _PlayerDetailContent(),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<PlayerDetailViewModels>().getPlayer(playerId);
+    });
+    return const _PlayerDetailContent();
   }
 }
 

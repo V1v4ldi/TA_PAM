@@ -1,5 +1,4 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:tugas_akhir/data/models/db_model.dart';
 import 'package:tugas_akhir/data/services/db_service.dart';
 
 class BookmarkRepositories {
