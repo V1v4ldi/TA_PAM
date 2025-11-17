@@ -1,6 +1,5 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:tugas_akhir/data/models/user_setting_models.dart';
 import 'package:tugas_akhir/data/repositories/auth_repositories.dart';
 import 'package:tugas_akhir/data/repositories/bookmark_repositories.dart';
 import 'package:tugas_akhir/data/repositories/game_repositories.dart';
@@ -38,7 +37,7 @@ List<SingleChildWidget> get appProviders => [
   Provider(create: (_) => CurrencyService()),
   Provider(create: (_) => CacheService()),
 
-  Provider(create: (context) => GameRepository(context.read<GameService>())),
+  Provider(create: (context) => GameRepository(context.read<GameService>(), context.read<CacheService>())),
   Provider(create: (context) => PlayerRepositories(context.read<PlayerService>(), context.read<CurrencyService>())),
   Provider(create: (context) => TeamRepositories(context.read<TeamsService>())),
   Provider(create: (context) => StandingRepositories(context.read<StandingsService>())),

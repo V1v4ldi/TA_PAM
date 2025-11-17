@@ -101,11 +101,16 @@ class GamesViewModels extends ChangeNotifier {
     notifyListeners();
 
     final games = await _repo.getGames();
-    allGames = games;
+    print(games);
+    final converted = await _repo.convertedDate(games);
+    allGames = converted;
+    print(converted);
 
-    preSeason = games.where((g) => g.stage == "Pre Season").toList();
-    regularSeason = games.where((g) => g.stage == "Regular Season").toList();
-    postSeason = games.where((g) => g.stage == "Post Season").toList();
+    preSeason = converted.where((g) => g.stage == "Pre Season").toList();
+    regularSeason = converted
+        .where((g) => g.stage == "Regular Season")
+        .toList();
+    postSeason = converted.where((g) => g.stage == "Post Season").toList();
 
     weeks =
         regularSeason

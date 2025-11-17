@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir/modelviews/setting_view_models.dart';
+import 'package:tugas_akhir/views/bottom_nav.dart';
 
 class Settings extends StatelessWidget {
   const Settings({super.key});
@@ -42,7 +43,7 @@ class _SettingsPage extends StatelessWidget {
             title: Text("Timezone"),
             trailing: DropdownButton<String>(
               value: vm.settings.timezone,
-              items: ['UTC','Asia/Jakarta','Europe/Berlin']
+              items: ['Asia/Dubai','Asia/Jakarta','Europe/Berlin','America/New_York']
                   .map((tz) => DropdownMenuItem<String>(
                         value: tz,
                         child: Text(tz),
@@ -54,7 +55,7 @@ class _SettingsPage extends StatelessWidget {
             ),
           ),
         ],
-      ),
+      ),bottomNavigationBar: CustomBottomNav(currentIndex: 3),
     );
   }
 }

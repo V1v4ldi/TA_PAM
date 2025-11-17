@@ -14,6 +14,23 @@ class PlayerDetailViewModels extends ChangeNotifier {
   PlayerModel? player;
   bool isLoading = false;
   Map<String, double>? currency;
+    
+  double parseSalary(String? playerSalary) {
+    if (playerSalary == null || playerSalary.isEmpty) return 0;
+
+    String clean = playerSalary.replaceAll(RegExp(r'[\$,]'), '');
+
+    return double.tryParse(clean) ?? 0;
+  }
+
+  double convertSalary(double playerSalary,String currency,Map<String, double> rates) {
+    final rate = rates[currency];
+
+    if (rate == null) throw Exception('Rate for $currency not found');
+    return playerSalary * rate;
+  }
+
+  // ------------------------------------------------------------------------------------------------ //
 
   Future<void> getPlayer(int playerId) async {
     isLoading = true;
@@ -26,12 +43,12 @@ class PlayerDetailViewModels extends ChangeNotifier {
 
       rates ??= await _playerRepo.getCurrency();
 
-      double? cleanSalary = _playerRepo.parseSalary(player!.salary);
+      double? cleanSalary = parseSalary(player!.salary);
 
       if (player!.salary == null || player!.salary!.isEmpty) return;
 
       if (userCurrency == 'USD') return;
-      final convertedSalary = _playerRepo.convertSalary(
+      final convertedSalary = convertSalary(
         cleanSalary,
         userCurrency,
         rates!,

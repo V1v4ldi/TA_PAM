@@ -16,8 +16,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  late TabController mainTab;  // Standings / Games
-  late TabController standingsTab; // League / Conference / Division
+  late TabController mainTab;  
+  late TabController standingsTab; 
 
   @override
   void initState() {
@@ -25,11 +25,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     mainTab = TabController(length: 2, vsync: this);
     standingsTab = TabController(length: 3, vsync: this);
 
-    // Fetch standings once
     Future.microtask(() =>
         Provider.of<StandingsViewModels>(context, listen: false).fetchStandings());
 
-    // Fetch games once
     Future.microtask(() =>
         Provider.of<GamesViewModels>(context, listen: false).loadGames());
   }
@@ -53,7 +51,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             children: [
               const _AppHeader(),
 
-              // 🔥 Tab Standings - Games
               TabBar(
                 controller: mainTab,
                 labelColor: Colors.white,
@@ -95,7 +92,6 @@ class _AppHeader extends StatelessWidget {
             AppColors.titleShaderGradient.createShader(
           Rect.fromLTWH(0, 0, bounds.width, bounds.height),
         ),
-        // jangan pakai `const` di sini karena kita butuh context di onPressed
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -104,7 +100,7 @@ class _AppHeader extends StatelessWidget {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Colors.white, // wajib putih supaya ShaderMask bekerja
+                color: Colors.white,
               ),
             ),
             IconButton(

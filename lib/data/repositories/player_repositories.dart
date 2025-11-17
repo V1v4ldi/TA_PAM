@@ -56,19 +56,4 @@ class PlayerRepositories {
 
     return rates;
   }
-
-  double parseSalary(String? playerSalary) {
-    if (playerSalary == null || playerSalary.isEmpty) return 0;
-
-    String clean = playerSalary.replaceAll(RegExp(r'[\$,]'), '');
-
-    return double.tryParse(clean) ?? 0;
-  }
-
-  double convertSalary(double playerSalary,String currency,Map<String, double> rates) {
-    final rate = rates[currency];
-
-    if (rate == null) throw Exception('Rate for $currency not found');
-    return playerSalary * rate;
-  }
 }

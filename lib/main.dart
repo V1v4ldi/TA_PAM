@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tugas_akhir/core/provider.dart';
@@ -21,6 +22,8 @@ void main() async {
 
     await Hive.initFlutter();
     await Hive.openLazyBox("cacheBox");
+
+    tz.initializeTimeZones();
   } catch (e) {
     throw Exception("Error Load .env: $e");
   }

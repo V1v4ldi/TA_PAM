@@ -226,7 +226,6 @@ class GameTile extends StatelessWidget {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    // TODO: integrasi LBS / Maps disini
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (ctx) => VenuePage(venueName: game.venueName))
@@ -235,9 +234,9 @@ class GameTile extends StatelessWidget {
                   child: Text(
                     game.venueName,
                     style: TextStyle(
-                      color: AppColors.pink300, // biar keliatan bisa diklik
+                      color: AppColors.pink300,
                       fontSize: 14,
-                      decoration: TextDecoration.underline, // opsional
+                      decoration: TextDecoration.underline,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),

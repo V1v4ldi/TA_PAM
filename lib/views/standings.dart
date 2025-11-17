@@ -68,7 +68,7 @@ class StandingsContent extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => TeamDetail(teamId: list[i].teamId), // buat nanti
+                      builder: (_) => TeamDetail(teamId: list[i].teamId),
                     ),
                   );
                 },
