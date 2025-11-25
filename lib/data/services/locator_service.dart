@@ -90,8 +90,6 @@ class LocationService {
         final routePoints = routeCoords
             .map<LatLng>((coord) => LatLng(coord[1], coord[0]))
             .toList();
-
-        print(routePoints);
         return routePoints;
       } else {
         // OSRM tidak menemukan rute ('NoRoute' dll), kembalikan garis lurus

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas_akhir/core/session.dart';
 import 'package:tugas_akhir/core/theme.dart';
 import 'package:tugas_akhir/data/models/game_detail_model.dart';
 import 'package:tugas_akhir/modelviews/game_detail_view_models.dart';
@@ -10,11 +11,20 @@ class GameDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<GameDetailViewModels>().loadDetailGame(gameId);
-    });
+    void checkSession() async {
+      final hasSession = await Provider.of<SessionCheck>(
+        context,
+        listen: false,
+      ).sessionCheck();
 
+      if (hasSession) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.read<GameDetailViewModels>().loadDetailGame(gameId);
+        });
+      }
+    }
+
+    checkSession();
     return _GameContent();
   }
 }
@@ -84,7 +94,7 @@ class _GameContent extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          
+
           // Possession bar
           Row(
             children: [
@@ -125,10 +135,7 @@ class _GameContent extends StatelessWidget {
   Widget _teamColumn(GameDetailModel team) {
     return Column(
       children: [
-        CircleAvatar(
-          radius: 26,
-          backgroundImage: NetworkImage(team.team.logo),
-        ),
+        CircleAvatar(radius: 26, backgroundImage: NetworkImage(team.team.logo)),
         const SizedBox(height: 6),
         SizedBox(
           width: 90,
@@ -165,14 +172,38 @@ class _GameContent extends StatelessWidget {
       ),
       child: Column(
         children: [
-          statsRow("First Downs", home.statistics.firstDowns.total, away.statistics.firstDowns.total),
+          statsRow(
+            "First Downs",
+            home.statistics.firstDowns.total,
+            away.statistics.firstDowns.total,
+          ),
           statsRow("Total Yards", home.statistics.yards, away.statistics.yards),
-          statsRow("Passing", home.statistics.passing.total, away.statistics.passing.total),
-          statsRow("Rushing", home.statistics.rushing.total, away.statistics.rushing.total),
-          statsRow("Penalties", home.statistics.penalties, away.statistics.penalties),
+          statsRow(
+            "Passing",
+            home.statistics.passing.total,
+            away.statistics.passing.total,
+          ),
+          statsRow(
+            "Rushing",
+            home.statistics.rushing.total,
+            away.statistics.rushing.total,
+          ),
+          statsRow(
+            "Penalties",
+            home.statistics.penalties,
+            away.statistics.penalties,
+          ),
           statsRow("Sacks", home.statistics.sacks, away.statistics.sacks),
-          statsRow("Turnovers", home.statistics.turnovers, away.statistics.turnovers),
-          statsRow("Red Zone", home.statistics.redZone, away.statistics.redZone),
+          statsRow(
+            "Turnovers",
+            home.statistics.turnovers,
+            away.statistics.turnovers,
+          ),
+          statsRow(
+            "Red Zone",
+            home.statistics.redZone,
+            away.statistics.redZone,
+          ),
         ],
       ),
     );

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas_akhir/core/session.dart';
 import 'package:tugas_akhir/modelviews/games_view_models.dart';
 import 'package:tugas_akhir/views/bottom_nav.dart';
 import 'package:tugas_akhir/views/games.dart';
 import 'package:tugas_akhir/views/search.dart';
 import 'package:tugas_akhir/views/standings.dart';
-import '../modelviews/standings_view_models.dart';
-import '../core/theme.dart';
+import 'package:tugas_akhir/modelviews/standings_view_models.dart';
+import 'package:tugas_akhir/core/theme.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,20 +17,35 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  late TabController mainTab;  
-  late TabController standingsTab; 
+  late TabController mainTab;
+  late TabController standingsTab;
+
+  void _checkSession() async {
+    final hasSession = await Provider.of<SessionCheck>(
+      context,
+      listen: false,
+    ).sessionCheck();
+
+    if (hasSession) {
+      Future.microtask(
+        () => Provider.of<StandingsViewModels>(
+          context,
+          listen: false,
+        ).fetchStandings(),
+      );
+
+      Future.microtask(
+        () => Provider.of<GamesViewModels>(context, listen: false).loadGames(),
+      );
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     mainTab = TabController(length: 2, vsync: this);
     standingsTab = TabController(length: 3, vsync: this);
-
-    Future.microtask(() =>
-        Provider.of<StandingsViewModels>(context, listen: false).fetchStandings());
-
-    Future.microtask(() =>
-        Provider.of<GamesViewModels>(context, listen: false).loadGames());
+    _checkSession();
   }
 
   @override
@@ -65,11 +81,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 child: TabBarView(
                   controller: mainTab,
                   children: [
-                  StandingsPage(standingsTab: standingsTab),
-                  const GamesPage(),
+                    StandingsPage(standingsTab: standingsTab),
+                    const GamesPage(),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -79,7 +95,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 }
 
-
 class _AppHeader extends StatelessWidget {
   const _AppHeader();
 
@@ -88,8 +103,7 @@ class _AppHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 16.0, left: 20, right: 20),
       child: ShaderMask(
-        shaderCallback: (bounds) =>
-            AppColors.titleShaderGradient.createShader(
+        shaderCallback: (bounds) => AppColors.titleShaderGradient.createShader(
           Rect.fromLTWH(0, 0, bounds.width, bounds.height),
         ),
         child: Row(
@@ -108,9 +122,7 @@ class _AppHeader extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => const SearchView(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const SearchView()),
                 );
               },
             ),

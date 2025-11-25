@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas_akhir/core/session.dart';
 import 'package:tugas_akhir/modelviews/player_detail_view_models.dart';
 
 class PlayerDetail extends StatelessWidget {
   final int playerId;
-  const PlayerDetail({required this.playerId ,super.key});
+  const PlayerDetail({required this.playerId, super.key});
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<PlayerDetailViewModels>().getPlayer(playerId);
-    });
+    void checkSession() async {
+      final hasSession = await Provider.of<SessionCheck>(
+        context,
+        listen: false,
+      ).sessionCheck();
+
+      if (hasSession) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.read<PlayerDetailViewModels>().getPlayer(playerId);
+        });
+      }
+    }
+    checkSession();
     return const _PlayerDetailContent();
   }
 }
@@ -23,9 +34,7 @@ class _PlayerDetailContent extends StatelessWidget {
     final vm = context.watch<PlayerDetailViewModels>();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(vm.player?.name ?? 'Player Detail'),
-      ),
+      appBar: AppBar(title: Text(vm.player?.name ?? 'Player Detail')),
       body: Builder(
         builder: (_) {
           if (vm.isLoading) {
@@ -50,7 +59,8 @@ class _PlayerDetailContent extends StatelessWidget {
                     p.image ?? '',
                     height: 200,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => const Icon(Icons.person, size: 80),
+                    errorBuilder: (_, __, ___) =>
+                        const Icon(Icons.person, size: 80),
                   ),
                 ),
                 const SizedBox(height: 16),

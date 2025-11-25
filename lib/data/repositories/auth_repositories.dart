@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tugas_akhir/data/services/db_service.dart';
+import 'package:tugas_akhir/main.dart';
 
 class AuthRepositories {
   final AuthService _authService;
@@ -24,7 +26,10 @@ class AuthRepositories {
 
     final uid = response.user!.id;
 
-    await supabase.from('users').insert({'id': uid, 'username': username});
+    await supabase.from('users').insert({
+      'id': uid,
+      'username': username,
+    }); // edit, harus di refractor
 
     return response.user;
   }

@@ -11,7 +11,6 @@ class GamesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // load first time only
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final vm = context.watch<GamesViewModels>();
       if (!vm.isLoading) vm.loadGames();

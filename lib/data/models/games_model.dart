@@ -60,7 +60,7 @@ class TeamGame {
     id: json["id"],
     name: json["name"],
     logo: json["logo"],
-    score: json["scores"]?["total"], // ambil dari scores.total
+    score: json["scores"]?["total"],
   );
   }
 }

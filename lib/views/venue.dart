@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas_akhir/core/session.dart';
 import 'package:tugas_akhir/modelviews/venue_view_models.dart';
 
 class VenuePage extends StatelessWidget {
@@ -9,10 +10,19 @@ class VenuePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<VenueViewModels>().loadMaps(venueName);
-    });
+    void checkSession() async {
+      final hasSession = await Provider.of<SessionCheck>(
+        context,
+        listen: false,
+      ).sessionCheck();
 
+      if (hasSession) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.read<VenueViewModels>().loadMaps(venueName);
+        });
+      }
+    }
+    checkSession();
     return Scaffold(
       appBar: AppBar(title: Text('Rute ke $venueName')),
       body: Consumer<VenueViewModels>(

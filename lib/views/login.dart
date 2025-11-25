@@ -3,6 +3,7 @@ import 'package:tugas_akhir/views/home.dart';
 import 'package:tugas_akhir/modelviews/login_view_models.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:tugas_akhir/views/register.dart';
 
 class Login extends StatelessWidget {
   const Login({super.key});
@@ -47,7 +48,7 @@ class Login extends StatelessWidget {
                             AppColors.titleShaderGradient
                                 .createShader(bounds),
                         child: Text(
-                          'FOOTBALL HUB LOGIN',
+                          'NFL VIEWER LOGIN',
                           style: Theme.of(context)
                               .textTheme
                               .displayLarge!
@@ -126,6 +127,35 @@ class Login extends StatelessWidget {
                           }
                         },
                       ),
+
+                      const SizedBox(height: 24), 
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Belum punya akun? ',
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: AppColors.grey400,
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const Register()),
+                              );
+                            },
+                            child: Text(
+                              'Daftar',
+                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                color: AppColors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 );
@@ -138,7 +168,6 @@ class Login extends StatelessWidget {
   }
 }
 
-/// ✅ Gradient button langsung embed di login.dart (tanpa file lain)
 class _GradientButton extends StatelessWidget {
   final String text;
   final bool isLoading;

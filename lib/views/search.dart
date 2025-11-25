@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas_akhir/core/session.dart';
 import 'package:tugas_akhir/core/theme.dart';
 import 'package:tugas_akhir/modelviews/search_view_models.dart';
 import 'package:tugas_akhir/views/bottom_nav.dart';
@@ -11,9 +12,20 @@ class SearchView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SearchViewModels>();
-    });
+    void checkSession() async {
+      final hasSession = await Provider.of<SessionCheck>(
+        context,
+        listen: false,
+      ).sessionCheck();
+
+      if (hasSession) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.read<SearchViewModels>();
+        });
+      }
+    }
+
+    checkSession();
     return _SearchContent();
   }
 }
@@ -100,41 +112,46 @@ class _SearchContent extends StatelessWidget {
                 if (vm.players.isNotEmpty)
                   _ResultSection(
                     title: "Players",
-                    results: vm.players.map(
-                      (p) => _ResultCard(
-                        title: p.name,
-                        subtitle: "${p.position ?? '-'} • ${p.college ?? '-'}",
-                        imageUrl: p.image ?? '',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => PlayerDetail(playerId: p.id),
-                            ),
-                          );
-                        },
-                      ),
-                    ).toList(),
+                    results: vm.players
+                        .map(
+                          (p) => _ResultCard(
+                            title: p.name,
+                            subtitle:
+                                "${p.position ?? '-'} • ${p.college ?? '-'}",
+                            imageUrl: p.image ?? '',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => PlayerDetail(playerId: p.id),
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                        .toList(),
                   ),
 
                 if (vm.teams.isNotEmpty)
                   _ResultSection(
                     title: "Teams",
-                    results: vm.teams.map(
-                      (t) => _ResultCard(
-                        title: t.name,
-                        subtitle: t.city ?? 'No city info',
-                        imageUrl: t.logo ?? '',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => TeamDetail(teamId: t.id),
-                            ),
-                          );
-                        },
-                      ),
-                    ).toList(),
+                    results: vm.teams
+                        .map(
+                          (t) => _ResultCard(
+                            title: t.name,
+                            subtitle: t.city ?? 'No city info',
+                            imageUrl: t.logo ?? '',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => TeamDetail(teamId: t.id),
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                        .toList(),
                   ),
               ],
             );

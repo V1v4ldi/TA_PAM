@@ -16,14 +16,13 @@ class VenueViewModels extends ChangeNotifier {
   VenueModel? get mapModel => _mapModel;
 
   Future<void> loadMaps(String venueName) async {
+    final cleanVenue = venueName.replaceAll(" ", "+").replaceAll("&", "%26");
     _isLoading = true;
     notifyListeners();
     try {
-      final data = await _venueRepositories.getRouteToVenue(venueName);
+      final data = await _venueRepositories.getRouteToVenue(cleanVenue);
       _mapModel = data;
-      print(_mapModel);
     } catch (e) {
-      print(_mapModel?.routePoints);
       _errorMessage = "Gagal Memuat Peta: ${e.toString()}";
     } finally {
       _isLoading = false;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:tugas_akhir/core/session.dart';
 import 'package:tugas_akhir/core/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:tugas_akhir/modelviews/team_detail_view_model.dart';
@@ -10,14 +11,27 @@ class TeamDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final user = Supabase.instance.client.auth.currentUser;
-      final userId = user?.id;
+    void checkSession() async {
+      final hasSession = await Provider.of<SessionCheck>(
+        context,
+        listen: false,
+      ).sessionCheck();
 
-      if(userId != null){
-        await context.read<TeamDetailViewModel>().init(teamId: teamId, userId: userId);
+      if (hasSession) {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          final user = Supabase.instance.client.auth.currentUser;
+          final userId = user?.id;
+
+          if (userId != null) {
+            await context.read<TeamDetailViewModel>().init(
+              teamId: teamId,
+              userId: userId,
+            );
+          }
+        });
       }
-    });
+    }
+    checkSession();
     return _TeamDetailContent();
   }
 }

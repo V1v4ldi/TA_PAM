@@ -4,16 +4,26 @@ class AuthService {
   final _supabase = Supabase.instance.client;
 
   Future<AuthResponse> login(String email, String password) async {
-    return await _supabase.auth.signInWithPassword(email: email, password: password,);
+    return await _supabase.auth.signInWithPassword(
+      email: email,
+      password: password,
+    );
   }
 
-  Future<AuthResponse> register(String email,String password,) async {
+  Future<AuthResponse> register(String email, String password) async {
     return await _supabase.auth.signUp(email: email, password: password);
   }
 
   Future<void> logout() => _supabase.auth.signOut();
 
   User? currentUser() => _supabase.auth.currentUser;
+
+  Future<bool> sessionCheck() async {
+    if (_supabase.auth.currentSession == null) {
+      return false;
+    }
+    return true;
+  }
 
   // <-- BOOKMARK (FAV TEAM) -->
 
@@ -37,9 +47,10 @@ class AuthService {
   }
 
   Future<void> removeBookmark(int teamId, String userId) async {
-    await _supabase.from('fav_team')
-    .delete()
-    .eq('user_id', userId)
-    .eq('api_team_id', teamId);
+    await _supabase
+        .from('fav_team')
+        .delete()
+        .eq('user_id', userId)
+        .eq('api_team_id', teamId);
   }
 }

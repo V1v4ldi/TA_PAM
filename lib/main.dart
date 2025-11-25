@@ -6,6 +6,7 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tugas_akhir/core/provider.dart';
+import 'package:tugas_akhir/views/game_detail.dart';
 import 'package:tugas_akhir/views/home.dart';
 import 'package:tugas_akhir/views/login.dart';
 import 'package:tugas_akhir/views/profile.dart';
@@ -13,15 +14,15 @@ import 'package:tugas_akhir/views/search.dart';
 import 'package:tugas_akhir/views/settings.dart';
 import 'package:tugas_akhir/core/notif.dart';
 
+final GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await dotenv.load(fileName: ".env");
-    
+
     await initNotifications();
 
     await Hive.initFlutter();
-    await Hive.openLazyBox("cacheBox");
 
     tz.initializeTimeZones();
   } catch (e) {
@@ -57,6 +58,7 @@ class FootballApp extends StatelessWidget {
           primarySwatch: Colors.purple,
         ),
         initialRoute: '/login',
+        navigatorKey: navKey,
         routes: {
           '/login': (_) => const Login(),
           '/home': (_) => const HomePage(),

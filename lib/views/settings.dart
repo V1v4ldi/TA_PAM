@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tugas_akhir/core/session.dart';
 import 'package:tugas_akhir/modelviews/setting_view_models.dart';
 import 'package:tugas_akhir/views/bottom_nav.dart';
 
@@ -8,9 +9,18 @@ class Settings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<SettingsViewModel>().loadSettings();
-    });
+    void checkSession() async {
+      final hasSession = await Provider.of<SessionCheck>(
+        context,
+        listen: false,
+      ).sessionCheck();
+
+      if (hasSession) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.read<SettingsViewModel>().loadSettings();
+        });
+      }
+    }
     return const _SettingsPage();
   }
 }

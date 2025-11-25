@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:tugas_akhir/core/session.dart';
 import 'package:tugas_akhir/data/repositories/auth_repositories.dart';
 import 'package:tugas_akhir/data/repositories/bookmark_repositories.dart';
 import 'package:tugas_akhir/data/repositories/game_repositories.dart';
@@ -46,6 +47,7 @@ List<SingleChildWidget> get appProviders => [
   Provider(create: (context) => VenueRepositories(context.read<LocationService>())),
   Provider(create: (context) => TeamRepositories(context.read<TeamsService>())),
   Provider(create: (context) => UserRepositories(context.read<CacheService>())),
+  Provider(create: (context) => SessionCheck(context.read<AuthService>())),
   
   
   ChangeNotifierProvider(create: (context) => LoginViewModels(context.read<AuthRepositories>())),
