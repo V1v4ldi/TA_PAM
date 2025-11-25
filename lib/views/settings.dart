@@ -21,6 +21,8 @@ class Settings extends StatelessWidget {
         });
       }
     }
+
+    checkSession();
     return const _SettingsPage();
   }
 }
@@ -28,8 +30,8 @@ class Settings extends StatelessWidget {
 class _SettingsPage extends StatelessWidget {
   const _SettingsPage();
 
-   @override
-   Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     final vm = context.watch<SettingsViewModel>();
 
     return Scaffold(
@@ -40,10 +42,11 @@ class _SettingsPage extends StatelessWidget {
             title: Text("Currency"),
             trailing: DropdownButton<String>(
               value: vm.settings.currency,
-              items: ['USD', 'EUR', 'IDR'].map((c) => DropdownMenuItem<String>(
-                    value: c,
-                    child: Text(c),
-                  )).toList(),
+              items: ['USD', 'EUR', 'IDR']
+                  .map(
+                    (c) => DropdownMenuItem<String>(value: c, child: Text(c)),
+                  )
+                  .toList(),
               onChanged: (value) {
                 if (value != null) vm.updateCurrency(value);
               },
@@ -53,19 +56,28 @@ class _SettingsPage extends StatelessWidget {
             title: Text("Timezone"),
             trailing: DropdownButton<String>(
               value: vm.settings.timezone,
-              items: ['Asia/Dubai','Asia/Jakarta','Europe/Berlin','America/New_York']
-                  .map((tz) => DropdownMenuItem<String>(
-                        value: tz,
-                        child: Text(tz),
-                      ))
-                  .toList(),
+              items:
+                  [
+                        'Asia/Dubai',
+                        'Asia/Jakarta',
+                        'Europe/Berlin',
+                        'America/New_York',
+                      ]
+                      .map(
+                        (tz) => DropdownMenuItem<String>(
+                          value: tz,
+                          child: Text(tz),
+                        ),
+                      )
+                      .toList(),
               onChanged: (value) {
                 if (value != null) vm.updateTimezone(value);
               },
             ),
           ),
         ],
-      ),bottomNavigationBar: CustomBottomNav(currentIndex: 3),
+      ),
+      bottomNavigationBar: CustomBottomNav(currentIndex: 3),
     );
   }
 }

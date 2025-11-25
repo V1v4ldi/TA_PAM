@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tugas_akhir/data/models/games_model.dart';
 import 'package:tugas_akhir/data/repositories/game_repositories.dart';
-import 'package:tugas_akhir/main.dart';
 
 class GamesViewModels extends ChangeNotifier {
   final GameRepository _repo;
@@ -102,7 +100,7 @@ class GamesViewModels extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    
+
 
     final games = await _repo.getGames();
 

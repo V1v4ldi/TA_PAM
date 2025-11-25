@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tugas_akhir/data/services/db_service.dart';
-import 'package:tugas_akhir/main.dart';
 
 class AuthRepositories {
   final AuthService _authService;

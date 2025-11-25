@@ -6,7 +6,6 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tugas_akhir/core/provider.dart';
-import 'package:tugas_akhir/views/game_detail.dart';
 import 'package:tugas_akhir/views/home.dart';
 import 'package:tugas_akhir/views/login.dart';
 import 'package:tugas_akhir/views/profile.dart';
