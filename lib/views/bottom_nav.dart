@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:tugas_akhir/core/theme.dart';
+import 'package:provider/provider.dart';
+import 'package:tugas_akhir/modelviews/login_view_models.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
 
-  const CustomBottomNav({
-    super.key,
-    required this.currentIndex,
-  });
+  const CustomBottomNav({super.key, required this.currentIndex});
 
   void _onItemTapped(BuildContext context, int index) {
-    if (index == currentIndex) return; // biar nggak push ulang halaman yang sama
+    if (index == currentIndex) return;
 
     switch (index) {
       case 0:
@@ -24,6 +23,14 @@ class CustomBottomNav extends StatelessWidget {
         break;
       case 3:
         Navigator.pushReplacementNamed(context, '/settings');
+        break;
+      case 4:
+        Future.microtask(() => Provider.of<LoginViewModels>(context, listen: false).logout());
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/login',
+          (Route<dynamic> route) => false,
+        );
         break;
     }
   }
@@ -54,6 +61,7 @@ class CustomBottomNav extends StatelessWidget {
               _buildNavItem(context, Icons.search_rounded, 'Search', 1),
               _buildNavItem(context, Icons.person_rounded, 'Profile', 2),
               _buildNavItem(context, Icons.settings_rounded, 'Settings', 3),
+              _buildNavItem(context, Icons.logout, 'Logout', 4),
             ],
           ),
         ),
@@ -62,7 +70,11 @@ class CustomBottomNav extends StatelessWidget {
   }
 
   Widget _buildNavItem(
-      BuildContext context, IconData icon, String label, int index) {
+    BuildContext context,
+    IconData icon,
+    String label,
+    int index,
+  ) {
     final isSelected = currentIndex == index;
 
     return GestureDetector(

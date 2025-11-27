@@ -35,7 +35,6 @@ class LoginViewModels extends ChangeNotifier {
         errorMessage = "Email atau password salah";
         return false;
       }
-
       return true;
     } catch (e) {
       errorMessage = "Terjadi kesalahan: $e";

@@ -10,8 +10,8 @@ class AuthService {
     );
   }
 
-  Future<AuthResponse> register(String email, String password) async {
-    return await _supabase.auth.signUp(email: email, password: password);
+  Future<AuthResponse> register(String email, String password, String username) async {
+    return await _supabase.auth.signUp(email: email, password: password, data: {'username': username});
   }
 
   Future<void> logout() => _supabase.auth.signOut();

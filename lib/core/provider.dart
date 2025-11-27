@@ -21,6 +21,7 @@ import 'package:tugas_akhir/modelviews/game_detail_view_models.dart';
 import 'package:tugas_akhir/modelviews/games_view_models.dart';
 import 'package:tugas_akhir/modelviews/login_view_models.dart';
 import 'package:tugas_akhir/modelviews/player_detail_view_models.dart';
+import 'package:tugas_akhir/modelviews/register_view_models.dart';
 import 'package:tugas_akhir/modelviews/search_view_models.dart';
 import 'package:tugas_akhir/modelviews/setting_view_models.dart';
 import 'package:tugas_akhir/modelviews/standings_view_models.dart';
@@ -51,6 +52,7 @@ List<SingleChildWidget> get appProviders => [
   
   
   ChangeNotifierProvider(create: (context) => LoginViewModels(context.read<AuthRepositories>())),
+  ChangeNotifierProvider(create: (context) => RegisterViewModel(context.read<AuthRepositories>())),
   ChangeNotifierProvider(create: (context) => SearchViewModels(context.read<PlayerRepositories>(), context.read<TeamRepositories>())),
   ChangeNotifierProvider(create: (context) => GamesViewModels(context.read<GameRepository>())),
   ChangeNotifierProvider(create: (context) => GameDetailViewModels(context.read<GameRepository>())),

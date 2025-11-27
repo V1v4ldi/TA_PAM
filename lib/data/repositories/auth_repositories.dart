@@ -20,14 +20,7 @@ class AuthRepositories {
   }
 
   Future<User?> register(String email, String password, String username) async {
-    final response = await _authService.register(email, password);
-
-    final uid = response.user!.id;
-
-    await supabase.from('users').insert({
-      'id': uid,
-      'username': username,
-    }); // edit, harus di refractor
+    final response = await _authService.register(email, password, username);
 
     return response.user;
   }
