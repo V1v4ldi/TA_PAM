@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:tugas_akhir/core/biometrics.dart';
 import 'package:tugas_akhir/core/session.dart';
 import 'package:tugas_akhir/data/repositories/auth_repositories.dart';
 import 'package:tugas_akhir/data/repositories/bookmark_repositories.dart';
@@ -38,6 +39,7 @@ List<SingleChildWidget> get appProviders => [
   Provider(create: (_) => AuthService()),
   Provider(create: (_) => CurrencyService()),
   Provider(create: (_) => CacheService()),
+  Provider(create: (_) => Biometrics()),
 
   Provider(create: (context) => GameRepository(context.read<GameService>(), context.read<CacheService>())),
   Provider(create: (context) => PlayerRepositories(context.read<PlayerService>(), context.read<CurrencyService>())),
@@ -51,7 +53,7 @@ List<SingleChildWidget> get appProviders => [
   Provider(create: (context) => SessionCheck(context.read<AuthService>())),
   
   
-  ChangeNotifierProvider(create: (context) => LoginViewModels(context.read<AuthRepositories>())),
+  ChangeNotifierProvider(create: (context) => LoginViewModels(context.read<AuthRepositories>(), context.read<Biometrics>())),
   ChangeNotifierProvider(create: (context) => RegisterViewModel(context.read<AuthRepositories>())),
   ChangeNotifierProvider(create: (context) => SearchViewModels(context.read<PlayerRepositories>(), context.read<TeamRepositories>())),
   ChangeNotifierProvider(create: (context) => GamesViewModels(context.read<GameRepository>())),

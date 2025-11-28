@@ -14,7 +14,7 @@ class AuthService {
     return await _supabase.auth.signUp(email: email, password: password, data: {'username': username});
   }
 
-  Future<void> logout() => _supabase.auth.signOut();
+  Future<void> logout() => _supabase.auth.signOut(scope: SignOutScope.local);
 
   User? currentUser() => _supabase.auth.currentUser;
 

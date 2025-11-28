@@ -14,16 +14,20 @@ class PlayerDetailViewModels extends ChangeNotifier {
   PlayerModel? player;
   bool isLoading = false;
   Map<String, double>? currency;
-    
+
   double parseSalary(String? playerSalary) {
     if (playerSalary == null || playerSalary.isEmpty) return 0;
 
-    String clean = playerSalary.replaceAll(RegExp(r'[\$,]'), '');
 
+    String clean = playerSalary.replaceAll(RegExp(r'[\$,()]'), '');
     return double.tryParse(clean) ?? 0;
   }
 
-  double convertSalary(double playerSalary,String currency,Map<String, double> rates) {
+  double convertSalary(
+    double playerSalary,
+    String currency,
+    Map<String, double> rates,
+  ) {
     final rate = rates[currency];
 
     if (rate == null) throw Exception('Rate for $currency not found');
@@ -48,11 +52,7 @@ class PlayerDetailViewModels extends ChangeNotifier {
       if (player!.salary == null || player!.salary!.isEmpty) return;
 
       if (userCurrency == 'USD') return;
-      final convertedSalary = convertSalary(
-        cleanSalary,
-        userCurrency,
-        rates!,
-      );
+      final convertedSalary = convertSalary(cleanSalary, userCurrency, rates!);
 
       String formatSalary(double value, String currency) {
         String sign = r'$';

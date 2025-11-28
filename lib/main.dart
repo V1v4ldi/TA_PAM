@@ -28,7 +28,6 @@ void main() async {
     throw Exception("Error Load .env: $e");
   }
 
-
   await Supabase.initialize(
     url: dotenv.env['SUPABASEHOST'] ?? "",
     anonKey: dotenv.env['SUPABASEAPI'] ?? "",

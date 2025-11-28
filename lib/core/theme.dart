@@ -60,5 +60,5 @@ class AppColors {
     end: Alignment.bottomRight,
   );
   
-  // Tambahkan gradient kompetisi/menu lainnya di sini sesuai DS
 }
+  // Tambahkan gradient kompetisi/menu lainnya di sini sesuai DS

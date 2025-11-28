@@ -67,8 +67,18 @@ class _GameContent extends StatelessWidget {
   }
 
   Widget _teamHeader(GameDetailModel home, GameDetailModel away) {
-    final homePoss = _posPercent(home.statistics.possession);
-    final awayPoss = _posPercent(away.statistics.possession);
+    final int homeSeconds = _parseSeconds(home.statistics.possession);
+    final int awaySeconds = _parseSeconds(away.statistics.possession);
+    
+    final int totalMatchSeconds = homeSeconds + awaySeconds;
+
+    int homePoss = 0;
+    int awayPoss = 0;
+
+    if (totalMatchSeconds > 0) {
+      homePoss = ((homeSeconds / totalMatchSeconds) * 100).round();
+      awayPoss = 100 - homePoss; 
+    }
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -95,16 +105,27 @@ class _GameContent extends StatelessWidget {
           ),
           const SizedBox(height: 12),
 
-          // Possession bar
           Row(
             children: [
               Expanded(
-                flex: homePoss,
-                child: Container(height: 8, color: AppColors.purple600),
+                flex: homePoss, 
+                child: Container(
+                  height: 8, 
+                  decoration: const BoxDecoration(
+                    color: AppColors.purple600,
+                    borderRadius: BorderRadius.horizontal(left: Radius.circular(4)),
+                  ),
+                ),
               ),
               Expanded(
                 flex: awayPoss,
-                child: Container(height: 8, color: AppColors.pink600),
+                child: Container(
+                  height: 8, 
+                  decoration: const BoxDecoration(
+                    color: AppColors.pink600,
+                    borderRadius: BorderRadius.horizontal(right: Radius.circular(4)),
+                  ),
+                ),
               ),
             ],
           ),
@@ -113,6 +134,7 @@ class _GameContent extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("$homePoss%", style: const TextStyle(color: Colors.white)),
+              Text("Possession", style: const TextStyle(color: Colors.grey, fontSize: 10)),
               Text("$awayPoss%", style: const TextStyle(color: Colors.white)),
             ],
           ),
@@ -121,15 +143,15 @@ class _GameContent extends StatelessWidget {
     );
   }
 
-  int _posPercent(String time) {
-    // convert MM:SS to percent
-    final parts = time.split(":");
-    final minutes = int.parse(parts[0]);
-    final seconds = int.parse(parts[1]);
-    final total = minutes * 60 + seconds;
-
-    // average NFL game ~ 3600 seconds, but we compare only two team totals
-    return (total / (3600 / 2) * 100).round().clamp(1, 100);
+  int _parseSeconds(String time) {
+    try {
+      final parts = time.split(":");
+      final minutes = int.parse(parts[0]);
+      final seconds = int.parse(parts[1]);
+      return (minutes * 60) + seconds;
+    } catch (e) {
+      return 0; 
+    }
   }
 
   Widget _teamColumn(GameDetailModel team) {

@@ -3,7 +3,7 @@ import 'package:tugas_akhir/data/services/db_service.dart';
 
 class AuthRepositories {
   final AuthService _authService;
-  final supabase = Supabase.instance.client;
+  final _supabase = Supabase.instance.client;
 
   AuthRepositories(this._authService);
 
@@ -27,5 +27,13 @@ class AuthRepositories {
 
   Future<void> logout() async {
     await _authService.logout();
+  }
+
+  Future<AuthResponse> recoverSession(String refreshToken) async {
+    try {
+      return await _supabase.auth.setSession(refreshToken);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

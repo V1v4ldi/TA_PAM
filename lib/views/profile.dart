@@ -10,11 +10,11 @@ class Profile extends StatelessWidget {
     const String userName = "Rikza Hasanudin";
     const String userNim = "124230054";
     const String userKesan =
-        "Belajar Flutter sangat menantang tapi hasilnya memuaskan. Logic state management seru banget!";
+        "Profile Picture";
     const String userPesan =
-        "Jangan pernah menyerah saat ketemu error merah. StackOverflow dan AI adalah teman terbaik.";
+        "Kurang Tau";
     const String profileImageUrl =
-        "https://media1.tenor.com/m/2f7m0vNLcGMAAAAd/lebron-lebron-james.gif";
+        "https://i.pinimg.com/236x/68/6d/61/686d6186ed648684027676bfbbb5ad0c.jpg";
 
     return Scaffold(
       extendBodyBehindAppBar: true,

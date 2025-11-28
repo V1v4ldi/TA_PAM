@@ -58,6 +58,7 @@ class _SettingsPage extends StatelessWidget {
               value: vm.settings.timezone,
               items:
                   [
+                        'UTC',
                         'Asia/Dubai',
                         'Asia/Jakarta',
                         'Europe/Berlin',
